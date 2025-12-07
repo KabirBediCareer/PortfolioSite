@@ -380,7 +380,7 @@ export default function Home() {
           </blockquote>
         </div>
         
-        <div className="flex gap-4 sm:gap-8 md:gap-16 px-4 sm:px-8">
+        <div className="flex justify-center gap-4 sm:gap-8 md:gap-16 px-4 sm:px-8 w-full">
           <button
             data-testid="button-creative"
             onMouseEnter={(e) => handleButtonHover(true, e)}
@@ -397,21 +397,6 @@ export default function Home() {
           </button>
 
           <button
-            data-testid="button-projects"
-            onMouseEnter={(e) => handleButtonHover(true, e)}
-            onMouseLeave={() => handleButtonHover(false)}
-            onClick={(e) => handleSectionClick('projects', e)}
-            className="group relative px-4 sm:px-6 py-3 bg-slate-800/50 border border-slate-600/50 backdrop-blur-sm
-                       hover:bg-slate-700/60 hover:border-slate-500/70 transition-all duration-300
-                       focus:outline-none focus:ring-1 focus:ring-cyan-400 focus:border-cyan-400
-                       active:scale-95 active:bg-slate-600/70 transform"
-          >
-            <span className="text-xs sm:text-sm font-mono text-slate-300 group-hover:text-cyan-200 transition-colors duration-300">
-              personal projects
-            </span>
-          </button>
-
-          <button
             data-testid="button-career"
             onMouseEnter={(e) => handleButtonHover(true, e)}
             onMouseLeave={() => handleButtonHover(false)}
@@ -423,6 +408,21 @@ export default function Home() {
           >
             <span className="text-xs sm:text-sm font-mono text-slate-300 group-hover:text-cyan-200 transition-colors duration-300">
               career
+            </span>
+          </button>
+
+          <button
+            data-testid="button-projects"
+            onMouseEnter={(e) => handleButtonHover(true, e)}
+            onMouseLeave={() => handleButtonHover(false)}
+            onClick={(e) => handleSectionClick('projects', e)}
+            className="group relative px-4 sm:px-6 py-3 bg-slate-800/50 border border-slate-600/50 backdrop-blur-sm
+                       hover:bg-slate-700/60 hover:border-slate-500/70 transition-all duration-300
+                       focus:outline-none focus:ring-1 focus:ring-cyan-400 focus:border-cyan-400
+                       active:scale-95 active:bg-slate-600/70 transform"
+          >
+            <span className="text-xs sm:text-sm font-mono text-slate-300 group-hover:text-cyan-200 transition-colors duration-300">
+              personal projects
             </span>
           </button>
         </div>
@@ -477,7 +477,7 @@ export default function Home() {
                   </div>
                 </div>
                 <a 
-                  href="https://instagram.com/kaciibedi" 
+                  href="https://www.instagram.com/reel/DN1xiAy0E3m/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="inline-block text-xs font-mono text-cyan-400 hover:text-cyan-300 underline"
@@ -541,6 +541,41 @@ export default function Home() {
               subtitle="Personal Project"
               description="As a primary caregiver for my aunt with autism and bipolar disorder, I built a Python application using pandas and scikit-learn. Used a random forest classifier to analyse behavioural patterns, identify cyclic mood variations, and forecast short-term temperament trends to support her stability."
             />
+
+            <div className="snap-center shrink-0 w-80 sm:w-96 flex flex-col justify-center min-h-[60vh]">
+              <div className="space-y-4">
+                <div className="text-xs font-mono text-cyan-400 uppercase tracking-wider">
+                  2025
+                </div>
+                <h3 className="text-xl sm:text-2xl font-mono text-slate-200 font-bold">
+                  Digital Content & Science Communication
+                </h3>
+                <p className="text-sm font-mono text-slate-300 leading-relaxed">
+                  Produced educational content on physics, AI, and personal growth across Instagram and TikTok.
+                </p>
+                <div className="space-y-2 pt-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg font-mono text-cyan-400 font-bold">2M+</span>
+                    <span className="text-sm font-mono text-slate-300">views</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg font-mono text-cyan-400 font-bold">4,000+</span>
+                    <span className="text-sm font-mono text-slate-300">organic followers</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-mono text-slate-400">amassed in 2 months</span>
+                  </div>
+                </div>
+                <a 
+                  href="https://www.instagram.com/reel/DN1xiAy0E3m/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="inline-block text-xs font-mono text-cyan-400 hover:text-cyan-300 underline"
+                >
+                  Watch on Instagram →
+                </a>
+              </div>
+            </div>
 
             <ServicesAndContact onBack={() => setActiveSection('none')} />
           </div>
