@@ -705,12 +705,59 @@ export default function Home() {
         </div>
       )}
 
-      {/* Contact Page */}
+      {/* Contact Page - Minimalist Icons */}
       {activeSection === 'contact' && (
-        <div className="fixed inset-0 z-20 flex items-center justify-center overflow-auto"
-             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-          <div className="flex flex-col items-center justify-center min-h-screen py-8 animate-fadeIn">
-            <ContactCard onBack={() => setActiveSection('none')} isFullPage={true} />
+        <div className="fixed inset-0 z-20 flex items-center justify-center">
+          <div className="flex flex-col items-center justify-center animate-fadeIn">
+            <div className="grid grid-cols-2 gap-6 mb-8">
+              <a 
+                href="mailto:kabirbedi01@hotmail.com"
+                className="w-16 h-16 flex items-center justify-center border border-slate-600/50 
+                           hover:border-cyan-400/70 hover:bg-slate-800/30 transition-all duration-300"
+                data-testid="contact-icon-email"
+              >
+                <span className="text-2xl text-slate-200">✉</span>
+              </a>
+              
+              <a 
+                href="tel:+447877337849"
+                className="w-16 h-16 flex items-center justify-center border border-slate-600/50 
+                           hover:border-cyan-400/70 hover:bg-slate-800/30 transition-all duration-300"
+                data-testid="contact-icon-phone"
+              >
+                <span className="text-2xl text-slate-200">☎</span>
+              </a>
+
+              <a 
+                href="https://linkedin.com/in/kabirbedi"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-16 h-16 flex items-center justify-center border border-slate-600/50 
+                           hover:border-cyan-400/70 hover:bg-slate-800/30 transition-all duration-300"
+                data-testid="contact-icon-linkedin"
+              >
+                <span className="text-xl text-slate-200 font-bold">in</span>
+              </a>
+
+              <a 
+                href="https://github.com/KabirBediCareer"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-16 h-16 flex items-center justify-center border border-slate-600/50 
+                           hover:border-cyan-400/70 hover:bg-slate-800/30 transition-all duration-300"
+                data-testid="contact-icon-github"
+              >
+                <span className="text-2xl text-slate-200">⌘</span>
+              </a>
+            </div>
+
+            <button
+              onClick={() => setActiveSection('none')}
+              className="text-xs font-mono text-slate-400 hover:text-cyan-300 transition-colors duration-300"
+              data-testid="button-back-home-contact"
+            >
+              ← back
+            </button>
           </div>
         </div>
       )}
