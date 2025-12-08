@@ -273,123 +273,52 @@ export default function Home() {
     </div>
   );
 
-  const ContactCard = ({ onBack, isFullPage = false }: { onBack: () => void; isFullPage?: boolean }) => (
+  const MinimalistContactIcons = ({ onBack }: { onBack: () => void }) => (
     <>
-      {/* Slide 1: What can I do for you? */}
-      <div className={`snap-center shrink-0 ${isFullPage ? 'w-full max-w-2xl mx-auto px-6' : 'w-80 sm:w-96'} flex flex-col justify-center min-h-[60vh]`}>
-        <div className="space-y-6">
-          <h3 className="text-xl sm:text-2xl font-mono text-slate-200 font-bold">
-            What can I do for you?
-          </h3>
+      <div className="snap-center shrink-0 w-80 sm:w-96 flex flex-col items-center justify-center min-h-[60vh]">
+        <div className="grid grid-cols-2 gap-6 mb-8">
+          <a 
+            href="mailto:kabirbedi01@hotmail.com"
+            className="w-16 h-16 flex items-center justify-center border border-slate-600/50 
+                       hover:border-cyan-400/70 hover:bg-slate-800/30 transition-all duration-300"
+          >
+            <span className="text-2xl text-slate-200">✉</span>
+          </a>
           
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <h4 className="text-base font-mono text-cyan-400 font-bold">
-                Creative Direction, Video Production & Marketing
-              </h4>
-              <p className="text-sm font-mono text-slate-300 leading-relaxed">
-                Brand identity, visual strategy, content creation, high-quality video production, and data-driven marketing campaigns.
-              </p>
-              <div className="flex flex-wrap gap-2 pt-1">
-                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">Adobe Suite</span>
-                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">Blender</span>
-                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">Cinema4D</span>
-              </div>
-            </div>
-            
-            <div className="space-y-2">
-              <h4 className="text-base font-mono text-cyan-400 font-bold">
-                Technical Development & Data Science
-              </h4>
-              <p className="text-sm font-mono text-slate-300 leading-relaxed">
-                Full-stack development, machine learning, scientific computing, and data analysis.
-              </p>
-              <div className="flex flex-wrap gap-2 pt-1">
-                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">Python</span>
-                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">TensorFlow</span>
-                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">ML</span>
-                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">Statistics</span>
-                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">React</span>
-                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">JavaScript</span>
-                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">HTML/CSS</span>
-                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">SQL</span>
-              </div>
-            </div>
-          </div>
+          <a 
+            href="tel:+447877337849"
+            className="w-16 h-16 flex items-center justify-center border border-slate-600/50 
+                       hover:border-cyan-400/70 hover:bg-slate-800/30 transition-all duration-300"
+          >
+            <span className="text-2xl text-slate-200">☎</span>
+          </a>
+
+          <a 
+            href="https://linkedin.com/in/kabirbedi"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-16 h-16 flex items-center justify-center border border-slate-600/50 
+                       hover:border-cyan-400/70 hover:bg-slate-800/30 transition-all duration-300"
+          >
+            <span className="text-xl text-slate-200 font-bold">in</span>
+          </a>
+
+          <a 
+            href="https://github.com/KabirBediCareer"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-16 h-16 flex items-center justify-center border border-slate-600/50 
+                       hover:border-cyan-400/70 hover:bg-slate-800/30 transition-all duration-300"
+          >
+            <span className="text-2xl text-slate-200">⌘</span>
+          </a>
         </div>
-      </div>
 
-      {/* Slide 2: Contact Icons Grid */}
-      <div className={`snap-center shrink-0 ${isFullPage ? 'w-full max-w-md mx-auto px-6' : 'w-80 sm:w-96'} flex flex-col justify-center min-h-[60vh]`}>
-        <div className="space-y-6">
-          <h3 className="text-xl sm:text-2xl font-mono text-slate-200 font-bold text-center">
-            Get in Touch
-          </h3>
-          
-          <div className="grid grid-cols-2 gap-4">
-            <a 
-              href="mailto:kabirbedi01@hotmail.com"
-              className="aspect-square flex flex-col items-center justify-center bg-cyan-500/20 border border-cyan-400/50 backdrop-blur-sm
-                         hover:bg-cyan-500/30 hover:border-cyan-400/70 transition-all duration-300
-                         focus:outline-none focus:ring-1 focus:ring-cyan-400 focus:border-cyan-400"
-              data-testid="button-contact-email"
-            >
-              <span className="text-3xl mb-2">✉</span>
-              <span className="text-xs font-mono text-cyan-300">Email</span>
-            </a>
-            
-            <a 
-              href="tel:+447877337849"
-              className="aspect-square flex flex-col items-center justify-center bg-cyan-500/20 border border-cyan-400/50 backdrop-blur-sm
-                         hover:bg-cyan-500/30 hover:border-cyan-400/70 transition-all duration-300
-                         focus:outline-none focus:ring-1 focus:ring-cyan-400 focus:border-cyan-400"
-              data-testid="button-contact-phone"
-            >
-              <span className="text-3xl mb-2">☎</span>
-              <span className="text-xs font-mono text-cyan-300">Phone</span>
-            </a>
-
-            <a 
-              href="https://linkedin.com/in/kabirbedi"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="aspect-square flex flex-col items-center justify-center bg-cyan-500/20 border border-cyan-400/50 backdrop-blur-sm
-                         hover:bg-cyan-500/30 hover:border-cyan-400/70 transition-all duration-300
-                         focus:outline-none focus:ring-1 focus:ring-cyan-400 focus:border-cyan-400"
-              data-testid="button-contact-linkedin"
-            >
-              <span className="text-3xl mb-2">in</span>
-              <span className="text-xs font-mono text-cyan-300">LinkedIn</span>
-            </a>
-
-            <a 
-              href="https://github.com/KabirBediCareer"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="aspect-square flex flex-col items-center justify-center bg-cyan-500/20 border border-cyan-400/50 backdrop-blur-sm
-                         hover:bg-cyan-500/30 hover:border-cyan-400/70 transition-all duration-300
-                         focus:outline-none focus:ring-1 focus:ring-cyan-400 focus:border-cyan-400"
-              data-testid="button-contact-github"
-            >
-              <span className="text-3xl mb-2">⌘</span>
-              <span className="text-xs font-mono text-cyan-300">GitHub</span>
-            </a>
-          </div>
-        </div>
-      </div>
-
-      {/* Slide 3: Back to Home */}
-      <div className={`snap-center shrink-0 ${isFullPage ? 'w-full max-w-2xl mx-auto px-6' : 'w-80 sm:w-96'} flex flex-col justify-center min-h-[60vh]`}>
         <button
           onClick={onBack}
-          className="px-6 py-3 bg-slate-800/50 border border-slate-600/50 backdrop-blur-sm
-                     hover:bg-slate-700/60 hover:border-slate-500/70 transition-all duration-300
-                     focus:outline-none focus:ring-1 focus:ring-cyan-400 focus:border-cyan-400"
-          data-testid="button-back-home"
+          className="text-xs font-mono text-slate-400 hover:text-cyan-300 transition-colors duration-300"
         >
-          <span className="text-sm font-mono text-slate-300 hover:text-cyan-200">
-            ← Back to Home
-          </span>
+          ← back
         </button>
       </div>
     </>
@@ -448,7 +377,7 @@ export default function Home() {
                          active:scale-95 active:bg-slate-600/70 transform"
             >
               <span className="text-xs sm:text-sm font-mono text-slate-300 group-hover:text-cyan-200 transition-colors duration-300">
-                career
+                experience
               </span>
             </button>
 
@@ -463,7 +392,7 @@ export default function Home() {
                          active:scale-95 active:bg-slate-600/70 transform"
             >
               <span className="text-xs sm:text-sm font-mono text-slate-300 group-hover:text-cyan-200 transition-colors duration-300">
-                personal projects
+                projects
               </span>
             </button>
           </div>
@@ -545,7 +474,7 @@ export default function Home() {
               </div>
             </div>
 
-            <ContactCard onBack={() => setActiveSection('none')} />
+            <MinimalistContactIcons onBack={() => setActiveSection('none')} />
           </div>
         </div>
       )}
@@ -557,13 +486,6 @@ export default function Home() {
           <style>{`.portfolio-timeline::-webkit-scrollbar { display: none; }`}</style>
           
           <div className="flex space-x-8 sm:space-x-16 md:space-x-32 px-4 sm:px-8 md:px-16 py-8 min-w-full portfolio-timeline animate-fadeIn">
-            <TimelineItem
-              year="2021–2025"
-              title="BSc Physics"
-              subtitle="King's College London"
-              description="Moved to London at 18. Engaged deeply with the AI community at KCL, completing two advanced modules from Computer Science. Developed expertise in scientific programming, data visualization, and machine learning."
-            />
-
             <TimelineItem
               year="2025"
               title="Quantum Machine Learning for Financial Fraud Detection"
@@ -635,7 +557,7 @@ export default function Home() {
               </div>
             </div>
 
-            <ContactCard onBack={() => setActiveSection('none')} />
+            <MinimalistContactIcons onBack={() => setActiveSection('none')} />
           </div>
         </div>
       )}
@@ -700,7 +622,7 @@ export default function Home() {
               description="Employed by the NHS to provide care for my aunt who requires 24/7 care. Undertook a rigorous personal project in data analytics, ML & Python to improve care quality and predict behavioural patterns."
             />
 
-            <ContactCard onBack={() => setActiveSection('none')} />
+            <MinimalistContactIcons onBack={() => setActiveSection('none')} />
           </div>
         </div>
       )}
