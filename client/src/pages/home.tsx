@@ -340,6 +340,9 @@ export default function Home() {
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-mono text-slate-200 font-bold tracking-wide">
             Kaci Bedi
           </h1>
+          <p className="text-xs sm:text-sm font-mono text-slate-400">
+            BSc Physics, King's College London
+          </p>
           <blockquote className="max-w-2xl mx-auto text-center px-4">
             <p className="text-sm sm:text-base font-mono text-slate-300 leading-relaxed">
               "You are not a drop in the ocean. You are the entire ocean in a drop."
@@ -570,26 +573,31 @@ export default function Home() {
           
           <div className="flex space-x-8 sm:space-x-16 md:space-x-32 px-4 sm:px-8 md:px-16 py-8 min-w-full portfolio-timeline animate-fadeIn">
             <TimelineItem
-              year="Oct–Dec 2025"
-              title="Growth & Creative Marketing Intern"
-              subtitle="Naked and Saucy Foods — Vancouver, BC"
-              description="Applied a scientific, data-driven approach to marketing—diving deep into customer demographics, purchase patterns, and performance KPIs to shape content strategy for a national CPG brand sold in Costco, Walmart, Loblaws, and major retailers across Canada."
-              link="https://nakedandsaucy.com"
-              linkText="nakedandsaucy.com"
+              year="Jan 2019–Sep 2021"
+              title="Primary Caregiver — Data Analytics"
+              subtitle="NHS — Kent, UK"
+              description="Employed by the NHS to provide care for my aunt who requires 24/7 care. Undertook a rigorous personal project in data analytics, ML & Python to improve care quality and predict behavioural patterns."
             />
 
             <TimelineItem
-              year="Sep–Nov 2025"
-              title="Mobile Mortgage Specialist Assistant"
-              subtitle="TD Bank — Vancouver, BC"
-              description="Served as the technical backbone of the mortgage practice by streamlining IT infrastructure and rigorously managing CRM data integrity. Leveraged deep real estate finance knowledge to provide high-touch, expert advisory services directly to clients."
-            />
-
-            <TimelineItem
-              year="Jan–Oct 2025"
-              title="Full-Stack Rota System Developer"
+              year="2021–2025"
+              title="BSc Physics"
               subtitle="King's College London"
-              description="Started as a Disability Support Worker providing academic and accessibility support. Identified inefficiencies and designed a full-stack rota system using Microsoft Power Apps and SharePoint. Secured a funding grant and delivered a GDPR-compliant database improving efficiency up to 50%."
+              description="Moved to London at 18. Engaged deeply with the AI community at KCL, completing two advanced modules from Computer Science. Developed expertise in scientific programming, data visualization, and machine learning."
+            />
+
+            <TimelineItem
+              year="Apr–Jun 2023"
+              title="Venue Sales Coordinator"
+              subtitle="King's College London"
+              description="Managed client enquiries and matched event requirements to appropriate KCL venues, overseeing bookings from initial contact through final confirmation. Coordinated with security, catering, and facilities teams to ensure smooth event delivery."
+            />
+
+            <TimelineItem
+              year="Apr–Aug 2023"
+              title="KCL Computer Science Hackathon Founder"
+              subtitle="King's College London"
+              description="Co-designed the inaugural, department-run KCLPuzzled hackathon by developing puzzles grounded in core CS fundamentals—Markov chains, graph search, classical ciphers, and encryption–decryption logic—alongside CS students and AI professors."
             />
 
             <TimelineItem
@@ -602,24 +610,26 @@ export default function Home() {
             />
 
             <TimelineItem
-              year="Apr–Aug 2023"
-              title="KCL Computer Science Hackathon Founder"
+              year="Jan–Oct 2025"
+              title="Full-Stack Rota System Developer"
               subtitle="King's College London"
-              description="Co-designed the inaugural, department-run KCLPuzzled hackathon by developing puzzles grounded in core CS fundamentals—Markov chains, graph search, classical ciphers, and encryption–decryption logic—alongside CS students and AI professors."
+              description="Started as a Disability Support Worker providing academic and accessibility support. Identified inefficiencies and designed a full-stack rota system using Microsoft Power Apps and SharePoint. Secured a funding grant and delivered a GDPR-compliant database improving efficiency up to 50%."
             />
 
             <TimelineItem
-              year="Apr–Jun 2023"
-              title="Venue Sales Coordinator"
-              subtitle="King's College London"
-              description="Managed client enquiries and matched event requirements to appropriate KCL venues, overseeing bookings from initial contact through final confirmation. Coordinated with security, catering, and facilities teams to ensure smooth event delivery."
+              year="Sep–Nov 2025"
+              title="Mobile Mortgage Specialist Assistant"
+              subtitle="TD Bank — Vancouver, BC"
+              description="Served as the technical backbone of the mortgage practice by streamlining IT infrastructure and rigorously managing CRM data integrity. Leveraged deep real estate finance knowledge to provide high-touch, expert advisory services directly to clients."
             />
 
             <TimelineItem
-              year="Jan 2019–Sep 2021"
-              title="Primary Caregiver — Data Analytics"
-              subtitle="NHS — Kent, UK"
-              description="Employed by the NHS to provide care for my aunt who requires 24/7 care. Undertook a rigorous personal project in data analytics, ML & Python to improve care quality and predict behavioural patterns."
+              year="Oct–Dec 2025"
+              title="Growth & Creative Marketing Intern"
+              subtitle="Naked and Saucy Foods — Vancouver, BC"
+              description="Applied a scientific, data-driven approach to marketing—diving deep into customer demographics, purchase patterns, and performance KPIs to shape content strategy for a national CPG brand sold in Costco, Walmart, Loblaws, and major retailers across Canada."
+              link="https://nakedandsaucy.com"
+              linkText="nakedandsaucy.com"
             />
 
             <MinimalistContactIcons onBack={() => setActiveSection('none')} />
