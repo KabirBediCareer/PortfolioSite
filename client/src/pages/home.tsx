@@ -273,8 +273,51 @@ export default function Home() {
     </div>
   );
 
-  const MinimalistContactIcons = ({ onBack }: { onBack: () => void }) => (
+  const WhatCanIDoSection = ({ onBack }: { onBack: () => void }) => (
     <>
+      <div className="snap-center shrink-0 w-80 sm:w-96 flex flex-col justify-center min-h-[60vh]">
+        <div className="space-y-6">
+          <h3 className="text-xl sm:text-2xl font-mono text-slate-200 font-bold">
+            What can I do for you?
+          </h3>
+          
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <h4 className="text-base font-mono text-cyan-400 font-bold">
+                Creative Direction, Video Production & Marketing
+              </h4>
+              <p className="text-sm font-mono text-slate-300 leading-relaxed">
+                Brand identity, visual strategy, content creation, high-quality video production, and data-driven marketing campaigns.
+              </p>
+              <div className="flex flex-wrap gap-2 pt-1">
+                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">Adobe Suite</span>
+                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">Blender</span>
+                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">Cinema4D</span>
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <h4 className="text-base font-mono text-cyan-400 font-bold">
+                Technical Development & Data Science
+              </h4>
+              <p className="text-sm font-mono text-slate-300 leading-relaxed">
+                Full-stack development, machine learning, scientific computing, and data analysis.
+              </p>
+              <div className="flex flex-wrap gap-2 pt-1">
+                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">Python</span>
+                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">TensorFlow</span>
+                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">ML</span>
+                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">Statistics</span>
+                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">React</span>
+                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">JavaScript</span>
+                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">HTML/CSS</span>
+                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">SQL</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="snap-center shrink-0 w-80 sm:w-96 flex flex-col items-center justify-center min-h-[60vh]">
         <div className="grid grid-cols-2 gap-6 mb-8">
           <a 
@@ -351,56 +394,52 @@ export default function Home() {
           </blockquote>
         </div>
         
-        <div className="flex flex-col items-center gap-4 sm:gap-6 px-4 sm:px-8 w-full">
-          {/* Top row - 3 main buttons */}
-          <div className="flex justify-center gap-4 sm:gap-8 md:gap-16">
-            <button
-              data-testid="button-creative"
-              onMouseEnter={(e) => handleButtonHover(true, e)}
-              onMouseLeave={() => handleButtonHover(false)}
-              onClick={(e) => handleSectionClick('creative', e)}
-              className="group relative px-4 sm:px-6 py-3 bg-slate-800/50 border border-slate-600/50 backdrop-blur-sm
-                         hover:bg-slate-700/60 hover:border-slate-500/70 transition-all duration-300
-                         focus:outline-none focus:ring-1 focus:ring-cyan-400 focus:border-cyan-400
-                         active:scale-95 active:bg-slate-600/70 transform"
-            >
-              <span className="text-xs sm:text-sm font-mono text-slate-300 group-hover:text-cyan-200 transition-colors duration-300">
-                creative portfolio
-              </span>
-            </button>
+        <div className="grid grid-cols-2 gap-4 sm:gap-6 px-4 sm:px-8 max-w-md">
+          <button
+            data-testid="button-creative"
+            onMouseEnter={(e) => handleButtonHover(true, e)}
+            onMouseLeave={() => handleButtonHover(false)}
+            onClick={(e) => handleSectionClick('creative', e)}
+            className="group relative px-4 sm:px-6 py-3 bg-slate-800/50 border border-slate-600/50 backdrop-blur-sm
+                       hover:bg-slate-700/60 hover:border-slate-500/70 transition-all duration-300
+                       focus:outline-none focus:ring-1 focus:ring-cyan-400 focus:border-cyan-400
+                       active:scale-95 active:bg-slate-600/70 transform"
+          >
+            <span className="text-xs sm:text-sm font-mono text-slate-300 group-hover:text-cyan-200 transition-colors duration-300">
+              creative portfolio
+            </span>
+          </button>
 
-            <button
-              data-testid="button-career"
-              onMouseEnter={(e) => handleButtonHover(true, e)}
-              onMouseLeave={() => handleButtonHover(false)}
-              onClick={(e) => handleSectionClick('career', e)}
-              className="group relative px-4 sm:px-6 py-3 bg-slate-800/50 border border-slate-600/50 backdrop-blur-sm
-                         hover:bg-slate-700/60 hover:border-slate-500/70 transition-all duration-300
-                         focus:outline-none focus:ring-1 focus:ring-cyan-400 focus:border-cyan-400
-                         active:scale-95 active:bg-slate-600/70 transform"
-            >
-              <span className="text-xs sm:text-sm font-mono text-slate-300 group-hover:text-cyan-200 transition-colors duration-300">
-                experience
-              </span>
-            </button>
+          <button
+            data-testid="button-career"
+            onMouseEnter={(e) => handleButtonHover(true, e)}
+            onMouseLeave={() => handleButtonHover(false)}
+            onClick={(e) => handleSectionClick('career', e)}
+            className="group relative px-4 sm:px-6 py-3 bg-slate-800/50 border border-slate-600/50 backdrop-blur-sm
+                       hover:bg-slate-700/60 hover:border-slate-500/70 transition-all duration-300
+                       focus:outline-none focus:ring-1 focus:ring-cyan-400 focus:border-cyan-400
+                       active:scale-95 active:bg-slate-600/70 transform"
+          >
+            <span className="text-xs sm:text-sm font-mono text-slate-300 group-hover:text-cyan-200 transition-colors duration-300">
+              experience
+            </span>
+          </button>
 
-            <button
-              data-testid="button-projects"
-              onMouseEnter={(e) => handleButtonHover(true, e)}
-              onMouseLeave={() => handleButtonHover(false)}
-              onClick={(e) => handleSectionClick('projects', e)}
-              className="group relative px-4 sm:px-6 py-3 bg-slate-800/50 border border-slate-600/50 backdrop-blur-sm
-                         hover:bg-slate-700/60 hover:border-slate-500/70 transition-all duration-300
-                         focus:outline-none focus:ring-1 focus:ring-cyan-400 focus:border-cyan-400
-                         active:scale-95 active:bg-slate-600/70 transform"
-            >
-              <span className="text-xs sm:text-sm font-mono text-slate-300 group-hover:text-cyan-200 transition-colors duration-300">
-                projects
-              </span>
-            </button>
-          </div>
+          <button
+            data-testid="button-projects"
+            onMouseEnter={(e) => handleButtonHover(true, e)}
+            onMouseLeave={() => handleButtonHover(false)}
+            onClick={(e) => handleSectionClick('projects', e)}
+            className="group relative px-4 sm:px-6 py-3 bg-slate-800/50 border border-slate-600/50 backdrop-blur-sm
+                       hover:bg-slate-700/60 hover:border-slate-500/70 transition-all duration-300
+                       focus:outline-none focus:ring-1 focus:ring-cyan-400 focus:border-cyan-400
+                       active:scale-95 active:bg-slate-600/70 transform"
+          >
+            <span className="text-xs sm:text-sm font-mono text-slate-300 group-hover:text-cyan-200 transition-colors duration-300">
+              projects
+            </span>
+          </button>
 
-          {/* Bottom row - contact button centered below */}
           <button
             data-testid="button-contact"
             onMouseEnter={(e) => handleButtonHover(true, e)}
@@ -477,7 +516,7 @@ export default function Home() {
               </div>
             </div>
 
-            <MinimalistContactIcons onBack={() => setActiveSection('none')} />
+            <WhatCanIDoSection onBack={() => setActiveSection('none')} />
           </div>
         </div>
       )}
@@ -560,7 +599,7 @@ export default function Home() {
               </div>
             </div>
 
-            <MinimalistContactIcons onBack={() => setActiveSection('none')} />
+            <WhatCanIDoSection onBack={() => setActiveSection('none')} />
           </div>
         </div>
       )}
@@ -632,7 +671,7 @@ export default function Home() {
               linkText="nakedandsaucy.com"
             />
 
-            <MinimalistContactIcons onBack={() => setActiveSection('none')} />
+            <WhatCanIDoSection onBack={() => setActiveSection('none')} />
           </div>
         </div>
       )}
