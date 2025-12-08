@@ -10,7 +10,7 @@ interface WaterParticle {
   intensity: number;
 }
 
-type ActiveSection = 'none' | 'creative' | 'projects' | 'career';
+type ActiveSection = 'none' | 'creative' | 'projects' | 'career' | 'contact';
 
 export default function Home() {
   const [activeSection, setActiveSection] = useState<ActiveSection>('none');
@@ -273,9 +273,9 @@ export default function Home() {
     </div>
   );
 
-  const ServicesAndContact = ({ onBack }: { onBack: () => void }) => (
+  const ContactCard = ({ onBack, isFullPage = false }: { onBack: () => void; isFullPage?: boolean }) => (
     <>
-      <div className="snap-center shrink-0 w-80 sm:w-96 flex flex-col justify-center min-h-[60vh]">
+      <div className={`snap-center shrink-0 ${isFullPage ? 'w-full max-w-2xl mx-auto px-6' : 'w-80 sm:w-96'} flex flex-col justify-center min-h-[60vh]`}>
         <div className="space-y-6">
           <h3 className="text-xl sm:text-2xl font-mono text-slate-200 font-bold">
             What can I do for you?
@@ -284,63 +284,99 @@ export default function Home() {
           <div className="space-y-4">
             <div className="space-y-2">
               <h4 className="text-base font-mono text-cyan-400 font-bold">
-                Creative Direction
+                Creative Direction, Video Production & Marketing
               </h4>
               <p className="text-sm font-mono text-slate-300 leading-relaxed">
-                Brand identity, visual strategy, and content creation
+                Brand identity, visual strategy, content creation, high-quality video production, and data-driven marketing campaigns.
               </p>
+              <div className="flex flex-wrap gap-2 pt-1">
+                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">Adobe Suite</span>
+                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">Blender</span>
+                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">Cinema4D</span>
+              </div>
             </div>
             
             <div className="space-y-2">
               <h4 className="text-base font-mono text-cyan-400 font-bold">
-                Video Production
+                Technical Development & Data Science
               </h4>
               <p className="text-sm font-mono text-slate-300 leading-relaxed">
-                High-quality video content and post-production
+                Full-stack development, machine learning, scientific computing, and data analysis.
               </p>
-            </div>
-            
-            <div className="space-y-2">
-              <h4 className="text-base font-mono text-cyan-400 font-bold">
-                Workflow Improvement & AI Implementation
-              </h4>
-              <p className="text-sm font-mono text-slate-300 leading-relaxed">
-                Automation, process optimization, and AI-powered solutions
-              </p>
+              <div className="flex flex-wrap gap-2 pt-1">
+                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">Python</span>
+                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">TensorFlow</span>
+                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">ML</span>
+                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">Statistics</span>
+                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">React</span>
+                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">JavaScript</span>
+                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">HTML/CSS</span>
+                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">SQL</span>
+              </div>
             </div>
           </div>
 
-          <div className="flex flex-col gap-3 pt-4">
+          <div className="grid grid-cols-2 gap-3 pt-4">
             <a 
               href="mailto:kabirbedi01@hotmail.com"
-              className="px-6 py-3 bg-cyan-500/20 border border-cyan-400/50 backdrop-blur-sm
+              className="px-4 py-3 bg-cyan-500/20 border border-cyan-400/50 backdrop-blur-sm
                          hover:bg-cyan-500/30 hover:border-cyan-400/70 transition-all duration-300
                          focus:outline-none focus:ring-1 focus:ring-cyan-400 focus:border-cyan-400
                          text-center"
               data-testid="button-contact-email"
             >
-              <span className="text-sm font-mono text-cyan-300 hover:text-cyan-200">
-                Contact via Email →
+              <span className="text-xs sm:text-sm font-mono text-cyan-300 hover:text-cyan-200">
+                Email →
               </span>
             </a>
             
             <a 
               href="tel:+447877337849"
-              className="px-6 py-3 bg-cyan-500/20 border border-cyan-400/50 backdrop-blur-sm
+              className="px-4 py-3 bg-cyan-500/20 border border-cyan-400/50 backdrop-blur-sm
                          hover:bg-cyan-500/30 hover:border-cyan-400/70 transition-all duration-300
                          focus:outline-none focus:ring-1 focus:ring-cyan-400 focus:border-cyan-400
                          text-center"
               data-testid="button-contact-phone"
             >
-              <span className="text-sm font-mono text-cyan-300 hover:text-cyan-200">
-                Call: +44 7877 337849 →
+              <span className="text-xs sm:text-sm font-mono text-cyan-300 hover:text-cyan-200">
+                +44 7877 337849 →
+              </span>
+            </a>
+
+            <a 
+              href="https://linkedin.com/in/kabirbedi"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-3 bg-cyan-500/20 border border-cyan-400/50 backdrop-blur-sm
+                         hover:bg-cyan-500/30 hover:border-cyan-400/70 transition-all duration-300
+                         focus:outline-none focus:ring-1 focus:ring-cyan-400 focus:border-cyan-400
+                         text-center"
+              data-testid="button-contact-linkedin"
+            >
+              <span className="text-xs sm:text-sm font-mono text-cyan-300 hover:text-cyan-200">
+                LinkedIn →
+              </span>
+            </a>
+
+            <a 
+              href="https://github.com/KabirBediCareer"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-3 bg-cyan-500/20 border border-cyan-400/50 backdrop-blur-sm
+                         hover:bg-cyan-500/30 hover:border-cyan-400/70 transition-all duration-300
+                         focus:outline-none focus:ring-1 focus:ring-cyan-400 focus:border-cyan-400
+                         text-center"
+              data-testid="button-contact-github"
+            >
+              <span className="text-xs sm:text-sm font-mono text-cyan-300 hover:text-cyan-200">
+                GitHub →
               </span>
             </a>
           </div>
         </div>
       </div>
 
-      <div className="snap-center shrink-0 w-80 sm:w-96 flex flex-col justify-center min-h-[60vh]">
+      <div className={`snap-center shrink-0 ${isFullPage ? 'w-full max-w-2xl mx-auto px-6' : 'w-80 sm:w-96'} flex flex-col justify-center min-h-[60vh]`}>
         <button
           onClick={onBack}
           className="px-6 py-3 bg-slate-800/50 border border-slate-600/50 backdrop-blur-sm
@@ -425,6 +461,21 @@ export default function Home() {
               personal projects
             </span>
           </button>
+
+          <button
+            data-testid="button-contact"
+            onMouseEnter={(e) => handleButtonHover(true, e)}
+            onMouseLeave={() => handleButtonHover(false)}
+            onClick={(e) => handleSectionClick('contact', e)}
+            className="group relative px-4 sm:px-6 py-3 bg-slate-800/50 border border-slate-600/50 backdrop-blur-sm
+                       hover:bg-slate-700/60 hover:border-slate-500/70 transition-all duration-300
+                       focus:outline-none focus:ring-1 focus:ring-cyan-400 focus:border-cyan-400
+                       active:scale-95 active:bg-slate-600/70 transform"
+          >
+            <span className="text-xs sm:text-sm font-mono text-slate-300 group-hover:text-cyan-200 transition-colors duration-300">
+              contact
+            </span>
+          </button>
         </div>
       </div>
 
@@ -487,7 +538,7 @@ export default function Home() {
               </div>
             </div>
 
-            <ServicesAndContact onBack={() => setActiveSection('none')} />
+            <ContactCard onBack={() => setActiveSection('none')} />
           </div>
         </div>
       )}
@@ -577,7 +628,7 @@ export default function Home() {
               </div>
             </div>
 
-            <ServicesAndContact onBack={() => setActiveSection('none')} />
+            <ContactCard onBack={() => setActiveSection('none')} />
           </div>
         </div>
       )}
@@ -642,7 +693,17 @@ export default function Home() {
               description="Employed by the NHS to provide care for my aunt who requires 24/7 care. Undertook a rigorous personal project in data analytics, ML & Python to improve care quality and predict behavioural patterns."
             />
 
-            <ServicesAndContact onBack={() => setActiveSection('none')} />
+            <ContactCard onBack={() => setActiveSection('none')} />
+          </div>
+        </div>
+      )}
+
+      {/* Contact Page */}
+      {activeSection === 'contact' && (
+        <div className="fixed inset-0 z-20 flex items-center justify-center overflow-auto"
+             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+          <div className="flex flex-col items-center justify-center min-h-screen py-8 animate-fadeIn">
+            <ContactCard onBack={() => setActiveSection('none')} isFullPage={true} />
           </div>
         </div>
       )}
