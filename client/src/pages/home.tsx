@@ -275,6 +275,7 @@ export default function Home() {
 
   const ContactCard = ({ onBack, isFullPage = false }: { onBack: () => void; isFullPage?: boolean }) => (
     <>
+      {/* Slide 1: What can I do for you? */}
       <div className={`snap-center shrink-0 ${isFullPage ? 'w-full max-w-2xl mx-auto px-6' : 'w-80 sm:w-96'} flex flex-col justify-center min-h-[60vh]`}>
         <div className="space-y-6">
           <h3 className="text-xl sm:text-2xl font-mono text-slate-200 font-bold">
@@ -315,67 +316,69 @@ export default function Home() {
               </div>
             </div>
           </div>
+        </div>
+      </div>
 
-          <div className="grid grid-cols-2 gap-3 pt-4">
+      {/* Slide 2: Contact Icons Grid */}
+      <div className={`snap-center shrink-0 ${isFullPage ? 'w-full max-w-md mx-auto px-6' : 'w-80 sm:w-96'} flex flex-col justify-center min-h-[60vh]`}>
+        <div className="space-y-6">
+          <h3 className="text-xl sm:text-2xl font-mono text-slate-200 font-bold text-center">
+            Get in Touch
+          </h3>
+          
+          <div className="grid grid-cols-2 gap-4">
             <a 
               href="mailto:kabirbedi01@hotmail.com"
-              className="px-4 py-3 bg-cyan-500/20 border border-cyan-400/50 backdrop-blur-sm
+              className="aspect-square flex flex-col items-center justify-center bg-cyan-500/20 border border-cyan-400/50 backdrop-blur-sm
                          hover:bg-cyan-500/30 hover:border-cyan-400/70 transition-all duration-300
-                         focus:outline-none focus:ring-1 focus:ring-cyan-400 focus:border-cyan-400
-                         text-center"
+                         focus:outline-none focus:ring-1 focus:ring-cyan-400 focus:border-cyan-400"
               data-testid="button-contact-email"
             >
-              <span className="text-xs sm:text-sm font-mono text-cyan-300 hover:text-cyan-200">
-                Email →
-              </span>
+              <span className="text-3xl mb-2">✉</span>
+              <span className="text-xs font-mono text-cyan-300">Email</span>
             </a>
             
             <a 
               href="tel:+447877337849"
-              className="px-4 py-3 bg-cyan-500/20 border border-cyan-400/50 backdrop-blur-sm
+              className="aspect-square flex flex-col items-center justify-center bg-cyan-500/20 border border-cyan-400/50 backdrop-blur-sm
                          hover:bg-cyan-500/30 hover:border-cyan-400/70 transition-all duration-300
-                         focus:outline-none focus:ring-1 focus:ring-cyan-400 focus:border-cyan-400
-                         text-center"
+                         focus:outline-none focus:ring-1 focus:ring-cyan-400 focus:border-cyan-400"
               data-testid="button-contact-phone"
             >
-              <span className="text-xs sm:text-sm font-mono text-cyan-300 hover:text-cyan-200">
-                +44 7877 337849 →
-              </span>
+              <span className="text-3xl mb-2">☎</span>
+              <span className="text-xs font-mono text-cyan-300">Phone</span>
             </a>
 
             <a 
               href="https://linkedin.com/in/kabirbedi"
               target="_blank"
               rel="noopener noreferrer"
-              className="px-4 py-3 bg-cyan-500/20 border border-cyan-400/50 backdrop-blur-sm
+              className="aspect-square flex flex-col items-center justify-center bg-cyan-500/20 border border-cyan-400/50 backdrop-blur-sm
                          hover:bg-cyan-500/30 hover:border-cyan-400/70 transition-all duration-300
-                         focus:outline-none focus:ring-1 focus:ring-cyan-400 focus:border-cyan-400
-                         text-center"
+                         focus:outline-none focus:ring-1 focus:ring-cyan-400 focus:border-cyan-400"
               data-testid="button-contact-linkedin"
             >
-              <span className="text-xs sm:text-sm font-mono text-cyan-300 hover:text-cyan-200">
-                LinkedIn →
-              </span>
+              <span className="text-3xl mb-2">in</span>
+              <span className="text-xs font-mono text-cyan-300">LinkedIn</span>
             </a>
 
             <a 
               href="https://github.com/KabirBediCareer"
               target="_blank"
               rel="noopener noreferrer"
-              className="px-4 py-3 bg-cyan-500/20 border border-cyan-400/50 backdrop-blur-sm
+              className="aspect-square flex flex-col items-center justify-center bg-cyan-500/20 border border-cyan-400/50 backdrop-blur-sm
                          hover:bg-cyan-500/30 hover:border-cyan-400/70 transition-all duration-300
-                         focus:outline-none focus:ring-1 focus:ring-cyan-400 focus:border-cyan-400
-                         text-center"
+                         focus:outline-none focus:ring-1 focus:ring-cyan-400 focus:border-cyan-400"
               data-testid="button-contact-github"
             >
-              <span className="text-xs sm:text-sm font-mono text-cyan-300 hover:text-cyan-200">
-                GitHub →
-              </span>
+              <span className="text-3xl mb-2">⌘</span>
+              <span className="text-xs font-mono text-cyan-300">GitHub</span>
             </a>
           </div>
         </div>
       </div>
 
+      {/* Slide 3: Back to Home */}
       <div className={`snap-center shrink-0 ${isFullPage ? 'w-full max-w-2xl mx-auto px-6' : 'w-80 sm:w-96'} flex flex-col justify-center min-h-[60vh]`}>
         <button
           onClick={onBack}
@@ -416,52 +419,56 @@ export default function Home() {
           </blockquote>
         </div>
         
-        <div className="flex justify-center gap-4 sm:gap-8 md:gap-16 px-4 sm:px-8 w-full">
-          <button
-            data-testid="button-creative"
-            onMouseEnter={(e) => handleButtonHover(true, e)}
-            onMouseLeave={() => handleButtonHover(false)}
-            onClick={(e) => handleSectionClick('creative', e)}
-            className="group relative px-4 sm:px-6 py-3 bg-slate-800/50 border border-slate-600/50 backdrop-blur-sm
-                       hover:bg-slate-700/60 hover:border-slate-500/70 transition-all duration-300
-                       focus:outline-none focus:ring-1 focus:ring-cyan-400 focus:border-cyan-400
-                       active:scale-95 active:bg-slate-600/70 transform"
-          >
-            <span className="text-xs sm:text-sm font-mono text-slate-300 group-hover:text-cyan-200 transition-colors duration-300">
-              creative portfolio
-            </span>
-          </button>
+        <div className="flex flex-col items-center gap-4 sm:gap-6 px-4 sm:px-8 w-full">
+          {/* Top row - 3 main buttons */}
+          <div className="flex justify-center gap-4 sm:gap-8 md:gap-16">
+            <button
+              data-testid="button-creative"
+              onMouseEnter={(e) => handleButtonHover(true, e)}
+              onMouseLeave={() => handleButtonHover(false)}
+              onClick={(e) => handleSectionClick('creative', e)}
+              className="group relative px-4 sm:px-6 py-3 bg-slate-800/50 border border-slate-600/50 backdrop-blur-sm
+                         hover:bg-slate-700/60 hover:border-slate-500/70 transition-all duration-300
+                         focus:outline-none focus:ring-1 focus:ring-cyan-400 focus:border-cyan-400
+                         active:scale-95 active:bg-slate-600/70 transform"
+            >
+              <span className="text-xs sm:text-sm font-mono text-slate-300 group-hover:text-cyan-200 transition-colors duration-300">
+                creative portfolio
+              </span>
+            </button>
 
-          <button
-            data-testid="button-career"
-            onMouseEnter={(e) => handleButtonHover(true, e)}
-            onMouseLeave={() => handleButtonHover(false)}
-            onClick={(e) => handleSectionClick('career', e)}
-            className="group relative px-4 sm:px-6 py-3 bg-slate-800/50 border border-slate-600/50 backdrop-blur-sm
-                       hover:bg-slate-700/60 hover:border-slate-500/70 transition-all duration-300
-                       focus:outline-none focus:ring-1 focus:ring-cyan-400 focus:border-cyan-400
-                       active:scale-95 active:bg-slate-600/70 transform"
-          >
-            <span className="text-xs sm:text-sm font-mono text-slate-300 group-hover:text-cyan-200 transition-colors duration-300">
-              career
-            </span>
-          </button>
+            <button
+              data-testid="button-career"
+              onMouseEnter={(e) => handleButtonHover(true, e)}
+              onMouseLeave={() => handleButtonHover(false)}
+              onClick={(e) => handleSectionClick('career', e)}
+              className="group relative px-4 sm:px-6 py-3 bg-slate-800/50 border border-slate-600/50 backdrop-blur-sm
+                         hover:bg-slate-700/60 hover:border-slate-500/70 transition-all duration-300
+                         focus:outline-none focus:ring-1 focus:ring-cyan-400 focus:border-cyan-400
+                         active:scale-95 active:bg-slate-600/70 transform"
+            >
+              <span className="text-xs sm:text-sm font-mono text-slate-300 group-hover:text-cyan-200 transition-colors duration-300">
+                career
+              </span>
+            </button>
 
-          <button
-            data-testid="button-projects"
-            onMouseEnter={(e) => handleButtonHover(true, e)}
-            onMouseLeave={() => handleButtonHover(false)}
-            onClick={(e) => handleSectionClick('projects', e)}
-            className="group relative px-4 sm:px-6 py-3 bg-slate-800/50 border border-slate-600/50 backdrop-blur-sm
-                       hover:bg-slate-700/60 hover:border-slate-500/70 transition-all duration-300
-                       focus:outline-none focus:ring-1 focus:ring-cyan-400 focus:border-cyan-400
-                       active:scale-95 active:bg-slate-600/70 transform"
-          >
-            <span className="text-xs sm:text-sm font-mono text-slate-300 group-hover:text-cyan-200 transition-colors duration-300">
-              personal projects
-            </span>
-          </button>
+            <button
+              data-testid="button-projects"
+              onMouseEnter={(e) => handleButtonHover(true, e)}
+              onMouseLeave={() => handleButtonHover(false)}
+              onClick={(e) => handleSectionClick('projects', e)}
+              className="group relative px-4 sm:px-6 py-3 bg-slate-800/50 border border-slate-600/50 backdrop-blur-sm
+                         hover:bg-slate-700/60 hover:border-slate-500/70 transition-all duration-300
+                         focus:outline-none focus:ring-1 focus:ring-cyan-400 focus:border-cyan-400
+                         active:scale-95 active:bg-slate-600/70 transform"
+            >
+              <span className="text-xs sm:text-sm font-mono text-slate-300 group-hover:text-cyan-200 transition-colors duration-300">
+                personal projects
+              </span>
+            </button>
+          </div>
 
+          {/* Bottom row - contact button centered below */}
           <button
             data-testid="button-contact"
             onMouseEnter={(e) => handleButtonHover(true, e)}
