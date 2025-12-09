@@ -337,7 +337,7 @@ export default function Home() {
           </a>
 
           <a 
-            href="https://linkedin.com/in/kabirbedi"
+            href="https://www.linkedin.com/in/kabir-bedii/"
             target="_blank"
             rel="noopener noreferrer"
             className="w-16 h-16 flex items-center justify-center border border-slate-600/50 
@@ -700,7 +700,7 @@ export default function Home() {
               </a>
 
               <a 
-                href="https://linkedin.com/in/kabirbedi"
+                href="https://www.linkedin.com/in/kabir-bedii/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-16 h-16 flex items-center justify-center border border-slate-600/50 
