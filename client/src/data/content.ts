@@ -18,6 +18,8 @@ export interface Entry {
 
 export const identity = {
   name: 'Kaci Bedi',
+  role: 'Head of Operations and Growth, 12M+ Audience',
+  education: 'BSc Physics, King\u2019s College London',
   quote: {
     text: '“You are not a drop in the ocean. You are the entire ocean in a drop.”',
     author: 'Rumi',

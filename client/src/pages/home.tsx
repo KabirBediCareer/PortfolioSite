@@ -73,6 +73,10 @@ export default function Home() {
           <h1 className="text-3xl sm:text-4xl md:text-5xl text-slate-100 font-bold tracking-wide">
             {identity.name}
           </h1>
+          <div className="space-y-1">
+            <p className="text-base sm:text-lg text-cyan-200/90">{identity.role}</p>
+            <p className="text-sm sm:text-[15px] text-slate-300">{identity.education}</p>
+          </div>
           <blockquote className="pt-2">
             <p className="text-xs sm:text-sm text-slate-400 leading-relaxed italic">{identity.quote.text}</p>
             <cite className="block mt-1.5 text-xs text-slate-500 not-italic">— {identity.quote.author}</cite>
