@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import FluidCanvas, { centreOf, type FluidHandle } from '@/components/FluidCanvas';
 import SectionView, { ContactLinks } from '@/components/SectionView';
-import { identity, sections, experience, projects, creative, type SectionId } from '@/data/content';
+import { identity, sections, bio, services, experience, personal, type SectionId } from '@/data/content';
 
 type Active = SectionId | 'none';
 
@@ -51,9 +51,9 @@ export default function Home() {
   }, []);
 
   const entriesFor: Record<SectionId, typeof experience> = {
+    services: [bio, ...services],
     experience,
-    projects,
-    creative,
+    personal,
     contact: [],
   };
 
@@ -73,8 +73,6 @@ export default function Home() {
           <h1 className="text-3xl sm:text-4xl md:text-5xl text-slate-100 font-bold tracking-wide">
             {identity.name}
           </h1>
-          <p className="text-base sm:text-lg text-cyan-200/90">{identity.headline}</p>
-          <p className="text-sm sm:text-[15px] text-slate-300 leading-relaxed">{identity.summary}</p>
           <blockquote className="pt-2">
             <p className="text-xs sm:text-sm text-slate-400 leading-relaxed italic">{identity.quote.text}</p>
             <cite className="block mt-1.5 text-xs text-slate-500 not-italic">— {identity.quote.author}</cite>
@@ -115,6 +113,7 @@ export default function Home() {
           label={current.label}
           blurb={current.blurb}
           entries={entriesFor[current.id]}
+          closing={current.id === 'services' ? 'contact' : 'services'}
           onBack={goHome}
           onButtonHover={hover}
           onButtonClick={click}

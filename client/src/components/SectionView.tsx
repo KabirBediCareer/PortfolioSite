@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Entry } from '@/data/content';
-import { identity, capabilities } from '@/data/content';
+import { identity, services } from '@/data/content';
 
 interface SectionViewProps {
   label: string;
   blurb: string;
   entries: Entry[];
+  /** Which panel closes the section: a pointer to services, or (in services itself) a nudge to get in touch. */
+  closing?: 'services' | 'contact';
   onBack: () => void;
   onButtonHover: (el: Element | null) => void;
   onButtonClick: (el: Element) => void;
@@ -19,10 +21,12 @@ const panelInner = 'my-auto w-full';
 export function EntryCard({ entry }: { entry: Entry }) {
   return (
     <article className={`space-y-3 ${entry.current ? 'border-l-2 border-cyan-400/70 pl-5' : ''}`}>
-      <div className="flex items-baseline gap-3 text-xs text-cyan-400 tracking-wider">
-        <span>{entry.period}</span>
-        {entry.current && <span className="text-cyan-200/80">now</span>}
-      </div>
+      {(entry.period || entry.current) && (
+        <div className="flex items-baseline gap-3 text-xs text-cyan-400 tracking-wider">
+          {entry.period && <span>{entry.period}</span>}
+          {entry.current && <span className="text-cyan-200/80">now</span>}
+        </div>
+      )}
       <h3 className="text-xl sm:text-2xl text-slate-100 font-bold leading-snug">{entry.title}</h3>
       {entry.subtitle && <p className="text-sm text-slate-300">{entry.subtitle}</p>}
       <p className="text-sm text-slate-300 leading-relaxed">{entry.description}</p>
@@ -46,6 +50,15 @@ export function EntryCard({ entry }: { entry: Entry }) {
           ))}
         </div>
       )}
+      {entry.tags && (
+        <div className="flex flex-wrap gap-2 pt-1">
+          {entry.tags.map((t) => (
+            <span key={t} className="text-xs text-slate-400 bg-slate-800/60 px-2 py-1 rounded">
+              {t}
+            </span>
+          ))}
+        </div>
+      )}
       {entry.link && (
         <a
           href={entry.link.href}
@@ -60,25 +73,35 @@ export function EntryCard({ entry }: { entry: Entry }) {
   );
 }
 
-export function CapabilitiesPanel() {
+export function ServicesPanel() {
   return (
     <div className="space-y-5">
       <h3 className="text-xl sm:text-2xl text-slate-100 font-bold">What I can do for you</h3>
-      <div className="space-y-4">
-        {capabilities.map((c) => (
-          <div key={c.title} className="space-y-2">
-            <h4 className="text-base text-cyan-400 font-bold">{c.title}</h4>
-            <p className="text-sm text-slate-300 leading-relaxed">{c.description}</p>
-            <div className="flex flex-wrap gap-2 pt-1">
-              {c.tools.map((t) => (
-                <span key={t} className="text-xs text-slate-400 bg-slate-800/60 px-2 py-1 rounded">
-                  {t}
-                </span>
-              ))}
-            </div>
-          </div>
+      <ul className="space-y-2">
+        {services.map((s) => (
+          <li key={s.title} className="flex gap-2 text-sm text-slate-300 leading-relaxed">
+            <span className="text-cyan-400/80 shrink-0">~</span>
+            <span>{s.title}</span>
+          </li>
         ))}
-      </div>
+      </ul>
+      <a
+        href="#services"
+        className="inline-block text-xs text-cyan-400 hover:text-cyan-200 underline underline-offset-4"
+      >
+        see all services
+      </a>
+    </div>
+  );
+}
+
+function ContactPrompt() {
+  return (
+    <div className="space-y-3">
+      <h3 className="text-xl sm:text-2xl text-slate-100 font-bold">Let&rsquo;s work together</h3>
+      <p className="text-sm text-slate-300 leading-relaxed">
+        Tell me where your content business is stuck and I&rsquo;ll tell you how I&rsquo;d fix it.
+      </p>
     </div>
   );
 }
@@ -117,12 +140,12 @@ export function ContactLinks({ compact = false }: { compact?: boolean }) {
   );
 }
 
-export default function SectionView({ label, blurb, entries, onBack, onButtonHover, onButtonClick }: SectionViewProps) {
+export default function SectionView({ label, blurb, entries, closing = 'services', onBack, onButtonHover, onButtonClick }: SectionViewProps) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [index, setIndex] = useState(0);
   const targetRef = useRef(0); // where the last navigation was heading, so fast key presses chain correctly
   const navUntilRef = useRef(0); // while a smooth scroll is in flight, scroll events must not reset the target
-  const total = entries.length + 1; // entries + closing "what I can do" panel
+  const total = entries.length + 1; // entries + closing panel
 
   const panels = useCallback(
     () => Array.from(scrollerRef.current?.querySelectorAll<HTMLElement>('[data-panel]') ?? []),
@@ -284,7 +307,7 @@ export default function SectionView({ label, blurb, entries, onBack, onButtonHov
         ))}
         <section data-panel className={panelClass}>
           <div className={panelInner}>
-            <CapabilitiesPanel />
+            {closing === 'services' ? <ServicesPanel /> : <ContactPrompt />}
             <a
               href="#contact"
               className="inline-block mt-6 text-xs text-cyan-400 hover:text-cyan-200 underline underline-offset-4"
