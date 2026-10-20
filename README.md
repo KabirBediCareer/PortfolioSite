@@ -1,63 +1,38 @@
-# Kaci Bedi - Personal Links Site
+# Kaci Bedi — portfolio
 
-A minimalist personal links website featuring an ASCII fluid simulation background inspired by Hokusai's wave art style. Built with React, TypeScript, and Canvas-based particle physics.
+Personal site at [kacibedi.com](https://kacibedi.com). React + TypeScript + Tailwind, with an ASCII fluid simulation drawn on a canvas.
 
-## ✨ Features
+## Edit the content
 
-- **ASCII Fluid Animation**: Dynamic water simulation that responds to button interactions
-- **Hokusai-Inspired Design**: Dark terminal aesthetic with teal/cyan accents
-- **Interactive Water Physics**: Water rises dramatically toward buttons when hovered
-- **Ripple Effects**: Button clicks create beautiful ripple effects across the water surface
-- **Personal Branding**: Features Rumi quote and social media links
+All copy lives in one file: `client/src/data/content.ts`. Change text there; nothing else needs touching for a wording update.
 
-## 🚀 GitHub Pages Deployment
+- `identity` — name, headline, summary, quote, contact details
+- `experience`, `projects`, `creative` — the cards in each section, newest first
+- `capabilities` — the "What I can do for you" panel
 
-This site is configured to automatically deploy to GitHub Pages from the `main` branch.
+## Run locally
 
-### Setup Instructions:
+```bash
+npm install
+npx vite --config vite.config.github.ts
+```
 
-1. **Enable GitHub Pages in your repository:**
-   - Go to Settings → Pages
-   - Set Source to "GitHub Actions"
-   
-2. **Push to main branch:**
-   - The GitHub Actions workflow will automatically build and deploy your site
-   - Your site will be available at `https://yourusername.github.io/repository-name`
+## Build and deploy
 
-### Troubleshooting:
+```bash
+npm run build:pages
+```
 
-If you see the README instead of your site:
-1. Make sure GitHub Pages source is set to "GitHub Actions" (not "Deploy from branch")
-2. Check the Actions tab for any build errors
-3. Ensure the `.nojekyll` file is present (prevents Jekyll processing)
+That writes the static site to `docs/` (including `CNAME` and `.nojekyll`). Commit `docs/` and push to `main`.
 
-3. **Build locally (optional):**
-   ```bash
-   npm install
-   npm run build
-   ```
-   - The built files will be in the `dist/public/` directory
+Two ways to serve it, pick one in GitHub → Settings → Pages:
 
-### Technical Notes:
+1. **Deploy from a branch**: branch `main`, folder `/docs`. No Actions needed. This is the simplest.
+2. **GitHub Actions**: the workflow in `.github/workflows/deploy.yml` builds `docs/` on every push and deploys it. Pushing changes to the workflow file needs a token with the `workflow` scope; if a push is rejected for that reason, delete the `.github` folder and use option 1.
 
-- The site is built as a static Single Page Application (SPA)
-- Uses Vite for building and bundling
-- All dependencies are frontend-only for GitHub Pages compatibility
-- The ASCII water simulation runs entirely in the browser using Canvas API
+## Structure
 
-## 🎨 Customization
-
-The water animation and styling can be customized in:
-- `client/src/pages/home.tsx` - Main component with water simulation
-- `client/src/index.css` - Global styles and color scheme
-
-## 🌊 Water Animation
-
-The site features a sophisticated ASCII fluid simulation with:
-- Real-time particle physics
-- Mouse interaction and button attraction
-- Dynamic ASCII character rendering based on water movement
-- Velocity-based color changes
-- Ripple effects on button interactions
-
-Built with vanilla Canvas API and mathematical physics simulation for optimal performance.
+- `client/src/pages/home.tsx` — landing page and routing between sections (sections live in the URL hash, so `#experience` links and the browser back button work)
+- `client/src/components/SectionView.tsx` — the horizontal timeline viewer (vertical list on phones), keyboard arrows and Escape
+- `client/src/components/FluidCanvas.tsx` — the water
+- `client/src/data/content.ts` — all text

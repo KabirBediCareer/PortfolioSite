@@ -1,734 +1,153 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import FluidCanvas, { centreOf, type FluidHandle } from '@/components/FluidCanvas';
+import SectionView, { ContactLinks } from '@/components/SectionView';
+import { identity, sections, experience, projects, creative, type SectionId } from '@/data/content';
 
-interface WaterParticle {
-  x: number;
-  y: number;
-  baseY: number;
-  vx: number;
-  vy: number;
-  charIndex: number;
-  intensity: number;
+type Active = SectionId | 'none';
+
+const sectionIds = sections.map((s) => s.id);
+
+function readHash(): Active {
+  const h = window.location.hash.replace('#', '') as SectionId;
+  return sectionIds.includes(h) ? h : 'none';
 }
 
-type ActiveSection = 'none' | 'creative' | 'projects' | 'career' | 'contact';
-
 export default function Home() {
-  const [activeSection, setActiveSection] = useState<ActiveSection>('none');
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const mouseRef = useRef({ x: 0, y: 0 });
-  const hoveredButtonRef = useRef<{ x: number; y: number } | null>(null);
-  const particlesRef = useRef<WaterParticle[]>([]);
-  const animationRef = useRef<number>();
-  const timeRef = useRef(0);
-  const rippleRef = useRef({ active: false, x: 0, y: 0, intensity: 0, time: 0 });
+  const [active, setActive] = useState<Active>(() => (typeof window === 'undefined' ? 'none' : readHash()));
+  const fluid = useRef<FluidHandle>(null);
 
-  const WATER_CHARS = ['~', '≈', '∼', '⌐', '¬', '∩', '∪', '°', '·', '`', ',', '.', ':', ';', '▴', '▾', '◆', '◇'];
-  
-  const PARTICLE_SIZE = 14;
-  const POOL_HEIGHT = 160;
-
+  // Sections live in the URL hash so refresh and the browser back button both work.
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const resizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      initializeFluid();
-    };
-
-    const initializeFluid = () => {
-      particlesRef.current = [];
-      const spacing = 8;
-      const cols = Math.floor(canvas.width / spacing);
-      const rows = Math.floor(POOL_HEIGHT / (spacing * 0.7));
-      
-      for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < cols; col++) {
-          const x = col * spacing + spacing/2;
-          const baseY = canvas.height - POOL_HEIGHT + row * (spacing * 0.7);
-          
-          particlesRef.current.push({
-            x: x + (Math.random() - 0.5) * 2,
-            y: baseY + (Math.random() - 0.5) * 2,
-            baseY: baseY,
-            vx: 0,
-            vy: 0,
-            charIndex: Math.floor(Math.random() * 6),
-            intensity: 0.5 + Math.random() * 0.3
-          });
-        }
-      }
-    };
-
-    const updateFluid = () => {
-      timeRef.current += 0.016;
-      const ripple = rippleRef.current;
-      
-      if (ripple.active) {
-        ripple.time += 0.016;
-        ripple.intensity *= 0.98;
-        if (ripple.intensity < 0.1) {
-          ripple.active = false;
-        }
-      }
-      
-      particlesRef.current.forEach((particle) => {
-        const wave = Math.sin(timeRef.current * 0.6 + particle.x * 0.008) * 1.5;
-        const restY = particle.baseY + wave;
-        
-        if (hoveredButtonRef.current) {
-          const buttonX = hoveredButtonRef.current.x;
-          const buttonY = hoveredButtonRef.current.y;
-          const dx = buttonX - particle.x;
-          const dy = buttonY - particle.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          
-          if (dist < 400) {
-            const force = Math.pow((400 - dist) / 400, 2) * 1.2;
-            particle.vx += (dx / dist) * force;
-            particle.vy += (dy / dist) * force;
-            particle.vy -= force * 2;
-          }
-        }
-        
-        if (ripple.active) {
-          const rippleDx = ripple.x - particle.x;
-          const rippleDy = ripple.y - particle.y;
-          const rippleDist = Math.sqrt(rippleDx * rippleDx + rippleDy * rippleDy);
-          
-          if (rippleDist < 300) {
-            const rippleWave = Math.sin((rippleDist * 0.02) - (ripple.time * 8)) * ripple.intensity;
-            particle.vx += (rippleDx / rippleDist) * rippleWave * 0.4;
-            particle.vy += (rippleDy / rippleDist) * rippleWave * 0.4;
-          }
-        }
-        
-        particle.vy += (restY - particle.y) * 0.02;
-        particle.vx *= 0.93;
-        particle.vy *= 0.93;
-        particle.x += particle.vx;
-        particle.y += particle.vy;
-        
-        if (particle.x < 0) particle.x = canvas.width;
-        if (particle.x > canvas.width) particle.x = 0;
-        if (particle.y > canvas.height - 20) particle.y = canvas.height - 20;
-        
-        const speed = Math.abs(particle.vx) + Math.abs(particle.vy);
-        const heightFromBase = Math.max(0, particle.baseY - particle.y);
-        
-        if (speed > 3 || heightFromBase > 40) {
-          particle.charIndex = 8 + Math.floor(Math.random() * 4);
-        } else if (speed > 1.5 || heightFromBase > 15) {
-          particle.charIndex = 4 + Math.floor(Math.random() * 4);
-        } else {
-          particle.charIndex = Math.floor(Math.random() * 4);
-        }
-      });
-    };
-
-    const renderFluid = () => {
-      if (!canvas || !ctx) return;
-      
-      const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-      gradient.addColorStop(0, '#0F172A');
-      gradient.addColorStop(0.3, '#1E293B'); 
-      gradient.addColorStop(0.7, '#334155');
-      gradient.addColorStop(1, '#475569');
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      
-      ctx.font = `${PARTICLE_SIZE}px Monaco, Consolas, "Courier New", monospace`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      
-      particlesRef.current.forEach(particle => {
-        const speed = Math.sqrt(particle.vx * particle.vx + particle.vy * particle.vy);
-        
-        let distanceFromButton = Infinity;
-        if (hoveredButtonRef.current) {
-          distanceFromButton = Math.sqrt(
-            (hoveredButtonRef.current.x - particle.x) ** 2 + (hoveredButtonRef.current.y - particle.y) ** 2
-          );
-        }
-        
-        if (distanceFromButton < 150) {
-          ctx.fillStyle = 'rgba(0, 255, 255, 0.95)';
-        } else if (distanceFromButton < 300) {
-          ctx.fillStyle = 'rgba(64, 224, 255, 0.8)';
-        } else if (speed > 2) {
-          ctx.fillStyle = 'rgba(100, 200, 255, 0.7)';
-        } else {
-          ctx.fillStyle = 'rgba(120, 180, 220, 0.6)';
-        }
-        
-        const char = WATER_CHARS[Math.max(0, Math.min(particle.charIndex, WATER_CHARS.length - 1))];
-        ctx.fillText(char, particle.x, particle.y);
-      });
-    };
-
-    const animate = () => {
-      if (!canvas || !ctx) return;
-      updateFluid();
-      renderFluid();
-      animationRef.current = requestAnimationFrame(animate);
-    };
-
-    const handleMouseMove = (e: MouseEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      mouseRef.current.x = e.clientX - rect.left;
-      mouseRef.current.y = e.clientY - rect.top;
-    };
-
-    resizeCanvas();
-    canvas.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('resize', resizeCanvas);
-    animate();
-
-    return () => {
-      canvas.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('resize', resizeCanvas);
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-    };
+    const onHash = () => setActive(readHash());
+    window.addEventListener('hashchange', onHash);
+    return () => window.removeEventListener('hashchange', onHash);
   }, []);
 
-  const handleButtonHover = (isHovering: boolean, event?: React.MouseEvent) => {
-    if (isHovering && event) {
-      const rect = event.currentTarget.getBoundingClientRect();
-      const canvas = canvasRef.current;
-      if (canvas) {
-        const canvasRect = canvas.getBoundingClientRect();
-        hoveredButtonRef.current = {
-          x: rect.left + rect.width / 2 - canvasRect.left,
-          y: rect.top + rect.height / 2 - canvasRect.top
-        };
-      }
-    } else {
-      hoveredButtonRef.current = null;
+  const open = useCallback((id: SectionId) => {
+    window.location.hash = id;
+  }, []);
+
+  const goHome = useCallback(() => {
+    if (window.location.hash) {
+      history.pushState(null, '', window.location.pathname + window.location.search);
     }
+    setActive('none');
+  }, []);
+
+  useEffect(() => {
+    if (active !== 'contact') return;
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && goHome();
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [active, goHome]);
+
+  const hover = useCallback((el: Element | null) => {
+    fluid.current?.attract(el ? centreOf(el) : null);
+  }, []);
+
+  const click = useCallback((el: Element) => {
+    fluid.current?.ripple(centreOf(el));
+    fluid.current?.attract(null);
+  }, []);
+
+  const entriesFor: Record<SectionId, typeof experience> = {
+    experience,
+    projects,
+    creative,
+    contact: [],
   };
 
-  const handleSectionClick = (section: ActiveSection, event: React.MouseEvent) => {
-    const rect = event.currentTarget.getBoundingClientRect();
-    const canvas = canvasRef.current;
-    if (canvas) {
-      const canvasRect = canvas.getBoundingClientRect();
-      const buttonCenterX = rect.left + rect.width / 2 - canvasRect.left;
-      const buttonCenterY = rect.top + rect.height / 2 - canvasRect.top;
-      
-      rippleRef.current = {
-        active: true,
-        x: buttonCenterX,
-        y: buttonCenterY,
-        intensity: 8,
-        time: 0
-      };
-    }
-    
-    setTimeout(() => {
-      setActiveSection(section);
-    }, 150);
-  };
-
-  const TimelineItem = ({ year, title, subtitle, description, link, linkText }: {
-    year: string;
-    title: string;
-    subtitle?: string;
-    description: string;
-    link?: string;
-    linkText?: string;
-  }) => (
-    <div className="snap-center shrink-0 w-80 sm:w-96 flex flex-col justify-center min-h-[60vh]">
-      <div className="space-y-4">
-        <div className="text-xs font-mono text-cyan-400 uppercase tracking-wider">
-          {year}
-        </div>
-        <h3 className="text-xl sm:text-2xl font-mono text-slate-200 font-bold">
-          {title}
-        </h3>
-        {subtitle && (
-          <h4 className="text-sm font-mono text-slate-300">
-            {subtitle}
-          </h4>
-        )}
-        <p className="text-sm font-mono text-slate-300 leading-relaxed">
-          {description}
-        </p>
-        {link && linkText && (
-          <a 
-            href={link} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="inline-block text-xs font-mono text-cyan-400 hover:text-cyan-300 underline"
-          >
-            {linkText} →
-          </a>
-        )}
-      </div>
-    </div>
-  );
-
-  const WhatCanIDoSection = ({ onBack }: { onBack: () => void }) => (
-    <>
-      <div className="snap-center shrink-0 w-80 sm:w-96 flex flex-col justify-center min-h-[60vh]">
-        <div className="space-y-6">
-          <h3 className="text-xl sm:text-2xl font-mono text-slate-200 font-bold">
-            What can I do for you?
-          </h3>
-          
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <h4 className="text-base font-mono text-cyan-400 font-bold">
-                Creative Direction, Video Production & Marketing
-              </h4>
-              <p className="text-sm font-mono text-slate-300 leading-relaxed">
-                Brand identity, visual strategy, content creation, high-quality video production, and data-driven marketing campaigns.
-              </p>
-              <div className="flex flex-wrap gap-2 pt-1">
-                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">Adobe Suite</span>
-                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">Blender</span>
-                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">Cinema4D</span>
-              </div>
-            </div>
-            
-            <div className="space-y-2">
-              <h4 className="text-base font-mono text-cyan-400 font-bold">
-                Technical Development & Data Science
-              </h4>
-              <p className="text-sm font-mono text-slate-300 leading-relaxed">
-                Full-stack development, machine learning, scientific computing, and data analysis.
-              </p>
-              <div className="flex flex-wrap gap-2 pt-1">
-                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">Python</span>
-                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">TensorFlow</span>
-                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">ML</span>
-                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">Statistics</span>
-                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">React</span>
-                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">JavaScript</span>
-                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">HTML/CSS</span>
-                <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">SQL</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="snap-center shrink-0 w-80 sm:w-96 flex flex-col items-center justify-center min-h-[60vh]">
-        <div className="grid grid-cols-2 gap-6 mb-8">
-          <a 
-            href="mailto:kabirbedi01@hotmail.com"
-            className="w-16 h-16 flex items-center justify-center border border-slate-600/50 
-                       hover:border-cyan-400/70 hover:bg-slate-800/30 transition-all duration-300"
-          >
-            <span className="text-2xl text-slate-200">✉</span>
-          </a>
-          
-          <a 
-            href="tel:+447877337849"
-            className="w-16 h-16 flex items-center justify-center border border-slate-600/50 
-                       hover:border-cyan-400/70 hover:bg-slate-800/30 transition-all duration-300"
-          >
-            <span className="text-2xl text-slate-200">☎</span>
-          </a>
-
-          <a 
-            href="https://www.linkedin.com/in/kabir-bedii/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-16 h-16 flex items-center justify-center border border-slate-600/50 
-                       hover:border-cyan-400/70 hover:bg-slate-800/30 transition-all duration-300"
-          >
-            <span className="text-xl text-slate-200 font-bold">in</span>
-          </a>
-
-          <a 
-            href="https://github.com/KabirBediCareer"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-16 h-16 flex items-center justify-center border border-slate-600/50 
-                       hover:border-cyan-400/70 hover:bg-slate-800/30 transition-all duration-300"
-          >
-            <span className="text-2xl text-slate-200">⌘</span>
-          </a>
-        </div>
-
-        <button
-          onClick={onBack}
-          className="text-xs font-mono text-slate-400 hover:text-cyan-300 transition-colors duration-300"
-        >
-          ← back
-        </button>
-      </div>
-    </>
-  );
+  const current = sections.find((s) => s.id === active);
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-slate-900 font-mono">
-      <canvas
-        ref={canvasRef}
-        className="fixed inset-0 w-full h-full"
-      />
-      
-      {/* Main Content - Landing Page */}
-      <div className={`relative z-10 flex flex-col items-center justify-center min-h-screen px-4 transition-all duration-1000 ${activeSection !== 'none' ? '-translate-y-full opacity-0' : 'translate-y-0 opacity-100'}`}>
-        <div className="text-center space-y-4 sm:space-y-6 md:space-y-8 mb-8 sm:mb-12 md:mb-16">
-          <p className="text-xs font-mono text-slate-400 uppercase tracking-wider mb-4 sm:mb-6 md:mb-8">
-            This site was made by
-          </p>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-mono text-slate-200 font-bold tracking-wide">
-            Kaci Bedi
+      <FluidCanvas ref={fluid} />
+
+      {/* Landing */}
+      <main
+        className={`relative z-10 flex flex-col items-center justify-center min-h-screen px-4 py-12
+                    transition-all duration-700 ${active !== 'none' ? '-translate-y-8 opacity-0 pointer-events-none' : 'translate-y-0 opacity-100'}`}
+        aria-hidden={active !== 'none'}
+      >
+        <div className="text-center max-w-xl mx-auto space-y-5 sm:space-y-6 mb-10 sm:mb-14">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl text-slate-100 font-bold tracking-wide">
+            {identity.name}
           </h1>
-          <p className="text-xs sm:text-sm font-mono text-slate-400">
-            BSc Physics, King's College London
-          </p>
-          <blockquote className="max-w-2xl mx-auto text-center px-4">
-            <p className="text-sm sm:text-base font-mono text-slate-300 leading-relaxed">
-              "You are not a drop in the ocean. You are the entire ocean in a drop."
-            </p>
-            <cite className="block mt-2 sm:mt-3 text-xs sm:text-sm font-mono text-slate-400">— Rumi</cite>
+          <p className="text-base sm:text-lg text-cyan-200/90">{identity.headline}</p>
+          <p className="text-sm sm:text-[15px] text-slate-300 leading-relaxed">{identity.summary}</p>
+          <blockquote className="pt-2">
+            <p className="text-xs sm:text-sm text-slate-400 leading-relaxed italic">{identity.quote.text}</p>
+            <cite className="block mt-1.5 text-xs text-slate-500 not-italic">— {identity.quote.author}</cite>
           </blockquote>
         </div>
-        
-        <div className="grid grid-cols-2 gap-4 sm:gap-6 px-4 sm:px-8 max-w-md">
-          <button
-            data-testid="button-creative"
-            onMouseEnter={(e) => handleButtonHover(true, e)}
-            onMouseLeave={() => handleButtonHover(false)}
-            onClick={(e) => handleSectionClick('creative', e)}
-            className="group relative px-4 sm:px-6 py-3 bg-slate-800/50 border border-slate-600/50 backdrop-blur-sm
-                       hover:bg-slate-700/60 hover:border-slate-500/70 transition-all duration-300
-                       focus:outline-none focus:ring-1 focus:ring-cyan-400 focus:border-cyan-400
-                       active:scale-95 active:bg-slate-600/70 transform"
-          >
-            <span className="text-xs sm:text-sm font-mono text-slate-300 group-hover:text-cyan-200 transition-colors duration-300">
-              creative portfolio
-            </span>
-          </button>
 
-          <button
-            data-testid="button-career"
-            onMouseEnter={(e) => handleButtonHover(true, e)}
-            onMouseLeave={() => handleButtonHover(false)}
-            onClick={(e) => handleSectionClick('career', e)}
-            className="group relative px-4 sm:px-6 py-3 bg-slate-800/50 border border-slate-600/50 backdrop-blur-sm
-                       hover:bg-slate-700/60 hover:border-slate-500/70 transition-all duration-300
-                       focus:outline-none focus:ring-1 focus:ring-cyan-400 focus:border-cyan-400
-                       active:scale-95 active:bg-slate-600/70 transform"
-          >
-            <span className="text-xs sm:text-sm font-mono text-slate-300 group-hover:text-cyan-200 transition-colors duration-300">
-              experience
-            </span>
-          </button>
-
-          <button
-            data-testid="button-projects"
-            onMouseEnter={(e) => handleButtonHover(true, e)}
-            onMouseLeave={() => handleButtonHover(false)}
-            onClick={(e) => handleSectionClick('projects', e)}
-            className="group relative px-4 sm:px-6 py-3 bg-slate-800/50 border border-slate-600/50 backdrop-blur-sm
-                       hover:bg-slate-700/60 hover:border-slate-500/70 transition-all duration-300
-                       focus:outline-none focus:ring-1 focus:ring-cyan-400 focus:border-cyan-400
-                       active:scale-95 active:bg-slate-600/70 transform"
-          >
-            <span className="text-xs sm:text-sm font-mono text-slate-300 group-hover:text-cyan-200 transition-colors duration-300">
-              projects
-            </span>
-          </button>
-
-          <button
-            data-testid="button-contact"
-            onMouseEnter={(e) => handleButtonHover(true, e)}
-            onMouseLeave={() => handleButtonHover(false)}
-            onClick={(e) => handleSectionClick('contact', e)}
-            className="group relative px-4 sm:px-6 py-3 bg-slate-800/50 border border-slate-600/50 backdrop-blur-sm
-                       hover:bg-slate-700/60 hover:border-slate-500/70 transition-all duration-300
-                       focus:outline-none focus:ring-1 focus:ring-cyan-400 focus:border-cyan-400
-                       active:scale-95 active:bg-slate-600/70 transform"
-          >
-            <span className="text-xs sm:text-sm font-mono text-slate-300 group-hover:text-cyan-200 transition-colors duration-300">
-              contact
-            </span>
-          </button>
-        </div>
-      </div>
-
-      {/* Creative Portfolio Timeline */}
-      {activeSection === 'creative' && (
-        <div className="fixed inset-0 z-20 flex items-center justify-start overflow-x-auto overflow-y-hidden snap-x snap-mandatory"
-             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-          <style>{`.portfolio-timeline::-webkit-scrollbar { display: none; }`}</style>
-          
-          <div className="flex space-x-8 sm:space-x-16 md:space-x-32 px-4 sm:px-8 md:px-16 py-8 min-w-full portfolio-timeline animate-fadeIn">
-            <TimelineItem
-              year="2025"
-              title="Clarius Living"
-              description="Directed social media creative and brand identity. Led 3D product design and rendering for complete catalog."
-              link="https://clariusliving.com"
-              linkText="clariusliving.com"
-            />
-
-            <TimelineItem
-              year="2025"
-              title="Naked & Saucy"
-              subtitle="Growth & Creative Marketing"
-              description="Applied a scientific, data-driven approach to marketing for a national CPG brand sold in Costco, Walmart, Loblaws. Blended statistical insight with creative execution to produce UGC, refine brand identity, and build experiments that boosted engagement."
-              link="https://nakedandsaucy.com"
-              linkText="nakedandsaucy.com"
-            />
-
-            <div className="snap-center shrink-0 w-80 sm:w-96 flex flex-col justify-center min-h-[60vh]">
-              <div className="space-y-4">
-                <div className="text-xs font-mono text-cyan-400 uppercase tracking-wider">
-                  2025
-                </div>
-                <h3 className="text-xl sm:text-2xl font-mono text-slate-200 font-bold">
-                  Digital Content & Science Communication
-                </h3>
-                <p className="text-sm font-mono text-slate-300 leading-relaxed">
-                  Produced educational content on physics, AI, and personal growth across Instagram and TikTok.
-                </p>
-                <div className="space-y-2 pt-2">
-                  <div className="flex items-center gap-2">
-                    <span className="text-lg font-mono text-cyan-400 font-bold">2M+</span>
-                    <span className="text-sm font-mono text-slate-300">views</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-lg font-mono text-cyan-400 font-bold">4,000+</span>
-                    <span className="text-sm font-mono text-slate-300">organic followers</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-mono text-slate-400">amassed in 2 months</span>
-                  </div>
-                </div>
-                <a 
-                  href="https://www.instagram.com/reel/DN1xiAy0E3m/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="inline-block text-xs font-mono text-cyan-400 hover:text-cyan-300 underline"
-                >
-                  Watch on Instagram →
-                </a>
-              </div>
-            </div>
-
-            <WhatCanIDoSection onBack={() => setActiveSection('none')} />
-          </div>
-        </div>
-      )}
-
-      {/* Personal Projects Timeline */}
-      {activeSection === 'projects' && (
-        <div className="fixed inset-0 z-20 flex items-center justify-start overflow-x-auto overflow-y-hidden snap-x snap-mandatory"
-             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-          <style>{`.portfolio-timeline::-webkit-scrollbar { display: none; }`}</style>
-          
-          <div className="flex space-x-8 sm:space-x-16 md:space-x-32 px-4 sm:px-8 md:px-16 py-8 min-w-full portfolio-timeline animate-fadeIn">
-            <TimelineItem
-              year="2025"
-              title="Quantum Machine Learning for Financial Fraud Detection"
-              subtitle="Dissertation — Final Grade: 77 (First Class)"
-              description="Benchmarked Quantum SVMs against SVM, CatBoost, XGBoost, and LightGBM on the PCA-transformed Kaggle Credit Card Fraud dataset. Ran QSVM circuits on the IBM Kyiv quantum backend and Qiskit Aer to evaluate performance and quantum advantage."
-            />
-
-            <TimelineItem
-              year="2022–2024"
-              title="KCL DJ Society President"
-              description="Elected President for leadership and community focus. Organised and DJ'd large-scale events of over 1,000 people. Led the society to its most successful year—raising over £3,000 for charity, hosting renowned DJs, and expanding membership to its largest level in history."
-              link="https://instagram.com/kaciibedi"
-              linkText="Instagram"
-            />
-
-            <TimelineItem
-              year="2024"
-              title="Physics of DJing Workshop"
-              subtitle="Jane Street × KCL Women in Physics"
-              description="Hosted an interactive workshop teaching attendees from esteemed professors to STEM students the physics behind DJing. Explained Fourier Analysis, Fourier transforms and frequency equalisation in an accessible and interactive way."
-            />
-
-            <TimelineItem
-              year="2023–2025"
-              title="Audiovisual Business"
-              subtitle="Founder"
-              description="Ran an audiovisual services business providing DJ, sound, and lighting solutions for events. Worked with clients including Yoto Play, Imperial CGCU, Imperial RCSU, KCLSU, and the School of Politics and Economics. Generated around £10,000 ARR to help fund my BSc Physics degree."
-            />
-
-            <TimelineItem
-              year="2019–2025"
-              title="Data Analyst + Caregiver"
-              subtitle="Personal Project"
-              description="As a primary caregiver for my aunt with autism and bipolar disorder, I built a Python application using pandas and scikit-learn. Used a random forest classifier to analyse behavioural patterns, identify cyclic mood variations, and forecast short-term temperament trends to support her stability."
-            />
-
-            <div className="snap-center shrink-0 w-80 sm:w-96 flex flex-col justify-center min-h-[60vh]">
-              <div className="space-y-4">
-                <div className="text-xs font-mono text-cyan-400 uppercase tracking-wider">
-                  2025
-                </div>
-                <h3 className="text-xl sm:text-2xl font-mono text-slate-200 font-bold">
-                  Digital Content & Science Communication
-                </h3>
-                <p className="text-sm font-mono text-slate-300 leading-relaxed">
-                  Produced educational content on physics, AI, and personal growth across Instagram and TikTok.
-                </p>
-                <div className="space-y-2 pt-2">
-                  <div className="flex items-center gap-2">
-                    <span className="text-lg font-mono text-cyan-400 font-bold">2M+</span>
-                    <span className="text-sm font-mono text-slate-300">views</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-lg font-mono text-cyan-400 font-bold">4,000+</span>
-                    <span className="text-sm font-mono text-slate-300">organic followers</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-mono text-slate-400">amassed in 2 months</span>
-                  </div>
-                </div>
-                <a 
-                  href="https://www.instagram.com/reel/DN1xiAy0E3m/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="inline-block text-xs font-mono text-cyan-400 hover:text-cyan-300 underline"
-                >
-                  Watch on Instagram →
-                </a>
-              </div>
-            </div>
-
-            <WhatCanIDoSection onBack={() => setActiveSection('none')} />
-          </div>
-        </div>
-      )}
-
-      {/* Career Timeline */}
-      {activeSection === 'career' && (
-        <div className="fixed inset-0 z-20 flex items-center justify-start overflow-x-auto overflow-y-hidden snap-x snap-mandatory"
-             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-          <style>{`.portfolio-timeline::-webkit-scrollbar { display: none; }`}</style>
-          
-          <div className="flex space-x-8 sm:space-x-16 md:space-x-32 px-4 sm:px-8 md:px-16 py-8 min-w-full portfolio-timeline animate-fadeIn">
-            <TimelineItem
-              year="Jan 2019–Sep 2021"
-              title="Primary Caregiver — Data Analytics"
-              subtitle="NHS — Kent, UK"
-              description="Employed by the NHS to provide care for my aunt who requires 24/7 care. Undertook a rigorous personal project in data analytics, ML & Python to improve care quality and predict behavioural patterns."
-            />
-
-            <TimelineItem
-              year="2021–2025"
-              title="BSc Physics"
-              subtitle="King's College London"
-              description="Moved to London at 18. Engaged deeply with the AI community at KCL, completing two advanced modules from Computer Science. Developed expertise in scientific programming, data visualization, and machine learning."
-            />
-
-            <TimelineItem
-              year="Apr–Jun 2023"
-              title="Venue Sales Coordinator"
-              subtitle="King's College London"
-              description="Managed client enquiries and matched event requirements to appropriate KCL venues, overseeing bookings from initial contact through final confirmation. Coordinated with security, catering, and facilities teams to ensure smooth event delivery."
-            />
-
-            <TimelineItem
-              year="Apr–Aug 2023"
-              title="KCL Computer Science Hackathon Founder"
-              subtitle="King's College London"
-              description="Co-designed the inaugural, department-run KCLPuzzled hackathon by developing puzzles grounded in core CS fundamentals—Markov chains, graph search, classical ciphers, and encryption–decryption logic—alongside CS students and AI professors."
-            />
-
-            <TimelineItem
-              year="May–Aug 2023"
-              title="Python Coder"
-              subtitle="Centre for Urban Science and Progress (CUSP) — London"
-              description="Tested and validated the Vizent Python Library for visualising data entropy and complexity. Created over 100 comprehensive test cases and presented findings for researchers—supporting real-world applications for UK National Grid, TFL, and international data projects."
-              link="https://pypi.org/project/vizent"
-              linkText="pypi.org/project/vizent"
-            />
-
-            <TimelineItem
-              year="Jan–Oct 2025"
-              title="Full-Stack Rota System Developer"
-              subtitle="King's College London"
-              description="Started as a Disability Support Worker providing academic and accessibility support. Identified inefficiencies and designed a full-stack rota system using Microsoft Power Apps and SharePoint. Secured a funding grant and delivered a GDPR-compliant database improving efficiency up to 50%."
-            />
-
-            <TimelineItem
-              year="Sep–Nov 2025"
-              title="Mobile Mortgage Specialist Assistant"
-              subtitle="TD Bank — Vancouver, BC"
-              description="Served as the technical backbone of the mortgage practice by streamlining IT infrastructure and rigorously managing CRM data integrity. Leveraged deep real estate finance knowledge to provide high-touch, expert advisory services directly to clients."
-            />
-
-            <TimelineItem
-              year="Oct–Dec 2025"
-              title="Growth & Creative Marketing Intern"
-              subtitle="Naked and Saucy Foods — Vancouver, BC"
-              description="Applied a scientific, data-driven approach to marketing—diving deep into customer demographics, purchase patterns, and performance KPIs to shape content strategy for a national CPG brand sold in Costco, Walmart, Loblaws, and major retailers across Canada."
-              link="https://nakedandsaucy.com"
-              linkText="nakedandsaucy.com"
-            />
-
-            <WhatCanIDoSection onBack={() => setActiveSection('none')} />
-          </div>
-        </div>
-      )}
-
-      {/* Contact Page - Minimalist Icons */}
-      {activeSection === 'contact' && (
-        <div className="fixed inset-0 z-20 flex items-center justify-center">
-          <div className="flex flex-col items-center justify-center animate-fadeIn">
-            <div className="grid grid-cols-2 gap-6 mb-8">
-              <a 
-                href="mailto:kabirbedi01@hotmail.com"
-                className="w-16 h-16 flex items-center justify-center border border-slate-600/50 
-                           hover:border-cyan-400/70 hover:bg-slate-800/30 transition-all duration-300"
-                data-testid="contact-icon-email"
-              >
-                <span className="text-2xl text-slate-200">✉</span>
-              </a>
-              
-              <a 
-                href="tel:+447877337849"
-                className="w-16 h-16 flex items-center justify-center border border-slate-600/50 
-                           hover:border-cyan-400/70 hover:bg-slate-800/30 transition-all duration-300"
-                data-testid="contact-icon-phone"
-              >
-                <span className="text-2xl text-slate-200">☎</span>
-              </a>
-
-              <a 
-                href="https://www.linkedin.com/in/kabir-bedii/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-16 h-16 flex items-center justify-center border border-slate-600/50 
-                           hover:border-cyan-400/70 hover:bg-slate-800/30 transition-all duration-300"
-                data-testid="contact-icon-linkedin"
-              >
-                <span className="text-xl text-slate-200 font-bold">in</span>
-              </a>
-
-              <a 
-                href="https://github.com/KabirBediCareer"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-16 h-16 flex items-center justify-center border border-slate-600/50 
-                           hover:border-cyan-400/70 hover:bg-slate-800/30 transition-all duration-300"
-                data-testid="contact-icon-github"
-              >
-                <span className="text-2xl text-slate-200">⌘</span>
-              </a>
-            </div>
-
+        <nav className="grid grid-cols-2 gap-3 sm:gap-4 w-full max-w-sm" aria-label="Sections">
+          {sections.map((s) => (
             <button
-              onClick={() => setActiveSection('none')}
-              className="text-xs font-mono text-slate-400 hover:text-cyan-300 transition-colors duration-300"
-              data-testid="button-back-home-contact"
+              key={s.id}
+              type="button"
+              data-testid={`button-${s.id}`}
+              onMouseEnter={(e) => hover(e.currentTarget)}
+              onMouseLeave={() => hover(null)}
+              onClick={(e) => {
+                click(e.currentTarget);
+                window.setTimeout(() => open(s.id), 150);
+              }}
+              className="group relative px-4 py-3 sm:py-3.5 bg-slate-800/50 border border-slate-600/50 backdrop-blur-sm text-left
+                         hover:bg-slate-700/60 hover:border-slate-500/70 transition-all duration-300
+                         focus:outline-none focus-visible:ring-1 focus-visible:ring-cyan-400 focus-visible:border-cyan-400
+                         active:scale-95 active:bg-slate-600/70 transform"
             >
-              ← back
+              <span className="block text-sm text-slate-200 group-hover:text-cyan-200 transition-colors duration-300">
+                {s.label}
+              </span>
+              <span className="block mt-0.5 text-[11px] text-slate-400 leading-snug">{s.blurb}</span>
             </button>
+          ))}
+        </nav>
+
+      </main>
+
+      {/* Timeline sections */}
+      {current && current.id !== 'contact' && (
+        <SectionView
+          key={current.id}
+          label={current.label}
+          blurb={current.blurb}
+          entries={entriesFor[current.id]}
+          onBack={goHome}
+          onButtonHover={hover}
+          onButtonClick={click}
+        />
+      )}
+
+      {/* Contact */}
+      {active === 'contact' && (
+        <div className="fixed inset-0 z-20 flex flex-col items-center justify-center px-6 animate-fadeIn">
+          <div className="w-full max-w-md space-y-6">
+            <div className="text-center space-y-2">
+              <h2 className="text-xl sm:text-2xl text-slate-100 font-bold">Get in touch</h2>
+              <p className="text-sm text-slate-300">
+                Based in {identity.location}. Email is the fastest way to reach me.
+              </p>
+            </div>
+            <ContactLinks />
+            <div className="text-center pt-2">
+              <button
+                type="button"
+                onClick={(e) => {
+                  click(e.currentTarget);
+                  goHome();
+                }}
+                onMouseEnter={(e) => hover(e.currentTarget)}
+                onMouseLeave={() => hover(null)}
+                className="text-xs text-slate-400 hover:text-cyan-300 transition-colors duration-300
+                           focus:outline-none focus-visible:ring-1 focus-visible:ring-cyan-400 px-2 py-1"
+                data-testid="button-back-home-contact"
+              >
+                ← back
+              </button>
+            </div>
           </div>
         </div>
       )}

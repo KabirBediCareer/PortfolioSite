@@ -10,6 +10,13 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes
 
+**October 20, 2026:**
+- Rewrote content around operations & growth work; moved all copy to client/src/data/content.ts
+- Split home.tsx into FluidCanvas and SectionView components; sections now use the URL hash
+- Keyboard navigation, position counter, mobile vertical layout, reduced motion support
+- Single GitHub Pages workflow building to docs/
+
+
 **August 20, 2025:**
 - Created personal links site with ASCII fluid simulation
 - Implemented button-focused water attraction system that works beautifully
