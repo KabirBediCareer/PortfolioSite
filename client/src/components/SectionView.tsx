@@ -40,6 +40,7 @@ export function EntryCard({ entry }: { entry: Entry }) {
           ))}
         </ul>
       )}
+      {entry.outro && <p className="text-sm text-slate-300 leading-relaxed pt-1">{entry.outro}</p>}
       {entry.stats && (
         <div className="flex flex-wrap gap-x-6 gap-y-2 pt-1">
           {entry.stats.map((s) => (

@@ -9,6 +9,8 @@ export interface Entry {
   description: string;
   highlights?: string[];
   stats?: { value: string; label: string }[];
+  /** A closing paragraph after the highlights. */
+  outro?: string;
   /** Small chips under the entry, e.g. the tools behind a service. */
   tags?: string[];
   link?: { href: string; label: string };
@@ -42,16 +44,17 @@ export const sections: { id: SectionId; label: string; blurb: string }[] = [
 
 // Opens the services section, ahead of the individual services.
 export const bio: Entry = {
-  title: 'Physicist turned operator',
-  subtitle: 'BSc Physics, King’s College London',
+  title: 'Who Am I?',
+  subtitle: 'Physicist + Science Communicator + Data Ops Analyst',
   description:
-    'I trained as a physicist and focused my degree on quantum computing and machine learning for finance. Then I found my passion: marrying science communication with operations. I help businesses in the science communication space transform by bringing scientific precision to the media industry.',
+    'I trained as a physicist and got my degree from King’s College London, where I focused on quantum computing and machine learning for finance. After graduating, I worked for one of the most competitive tech startups in the UK, Fuse Energy, where I worked as an operations analyst. I also created viral videos breaking down complex physics into ‘Brian Cox-esque’ videos, which led to me getting headhunted for work as head of growth and operations in the science communications industry. What you can expect from me:',
   highlights: [
     'Scientific rigour: every claim checked, every decision tested against the data',
-    'AI expertise: from quantum machine learning to the agents and automations that run a content business',
+    'AI expertise: up to date with the latest innovations that will keep your business ahead of the competition in both speed and, more importantly, quality',
     'Media literacy: hooks, formats, funnels and what actually moves an audience',
   ],
-  stats: [{ value: '3 in 1', label: 'a rare combination in one person' }],
+  outro:
+    'I bring the scientific precision of a physicist and marry it up with the creativity of an artist to ensure your business is strong in both quality and efficiency.',
 };
 
 export const services: Entry[] = [
